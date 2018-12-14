@@ -1,5 +1,6 @@
 package com.expedia.graphql.schema.extensions
 
+import com.expedia.graphql.annotations.GraphQLDefaultValue
 import com.expedia.graphql.annotations.GraphQLDescription
 import com.expedia.graphql.annotations.GraphQLID
 import com.expedia.graphql.annotations.GraphQLIgnore
@@ -25,3 +26,7 @@ internal fun Deprecated.getReason(): String? {
 
     return builder.toString()
 }
+
+internal fun KAnnotatedElement.hasDefaultValue() = this.findAnnotation<GraphQLDefaultValue>() != null
+
+internal fun KAnnotatedElement.getDefaultValueAsString() = this.findAnnotation<GraphQLDefaultValue>()?.valueAsString ?: ""

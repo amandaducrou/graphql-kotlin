@@ -3,8 +3,10 @@ package com.expedia.graphql.schema.generator.types
 import com.expedia.graphql.schema.KotlinDataFetcher
 import com.expedia.graphql.schema.Parameter
 import com.expedia.graphql.schema.extensions.directives
+import com.expedia.graphql.schema.extensions.getDefaultValueAsString
 import com.expedia.graphql.schema.extensions.getDeprecationReason
 import com.expedia.graphql.schema.extensions.getGraphQLDescription
+import com.expedia.graphql.schema.extensions.hasDefaultValue
 import com.expedia.graphql.schema.extensions.isGraphQLContext
 import com.expedia.graphql.schema.extensions.throwIfUnathorizedInterface
 import com.expedia.graphql.schema.generator.SchemaGenerator
@@ -75,6 +77,10 @@ internal class FunctionTypeBuilder(generator: SchemaGenerator) : TypeBuilder(gen
         parameter.directives(generator).forEach {
             builder.withDirective(it)
             state.directives.add(it)
+        }
+
+        if(parameter.hasDefaultValue()) {
+            builder.defaultValue(parameter.getDefaultValueAsString())
         }
 
         return config.hooks.onRewireGraphQLType(parameter.type, builder.build()) as GraphQLArgument

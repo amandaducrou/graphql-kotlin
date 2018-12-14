@@ -4,6 +4,8 @@ import com.expedia.graphql.schema.extensions.getPropertyDescription
 import com.expedia.graphql.schema.extensions.getValidProperties
 import com.expedia.graphql.schema.extensions.getGraphQLDescription
 import com.expedia.graphql.schema.extensions.isPropertyGraphQLID
+import com.expedia.graphql.schema.extensions.getDefaultValueAsString
+import com.expedia.graphql.schema.extensions.hasDefaultValue
 import com.expedia.graphql.schema.generator.SchemaGenerator
 import com.expedia.graphql.schema.generator.TypeBuilder
 import graphql.schema.GraphQLInputObjectField
@@ -33,6 +35,9 @@ internal class InputObjectTypeBuilder(generator: SchemaGenerator) : TypeBuilder(
         builder.description(prop.getPropertyDescription(parentClass))
         builder.name(prop.name)
         builder.type(graphQLTypeOf(prop.returnType, true, prop.isPropertyGraphQLID(parentClass)) as? GraphQLInputType)
+        if(prop.hasDefaultValue()) {
+            builder.defaultValue(prop.getDefaultValueAsString())
+        }
 
         return builder.build()
     }
